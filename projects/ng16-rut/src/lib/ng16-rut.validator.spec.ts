@@ -1,4 +1,4 @@
-import { Ng16RutValidator } from './ng16-rut-validator';
+import { Ng16RutValidator } from './ng16-rut.validator';
 
 describe('Ng16RutValidatorDirective', () => {
   it('should create an instance', () => {
