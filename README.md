@@ -1,27 +1,104 @@
-# Ng16Rut
+Angular 16 RUT
+=============
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.0.1.
+Fork de https://github.com/landscapedotcl/ng9-rut que a su vez es un fork de https://github.com/platanus/ng2-rut para funcionar bajo Angular 17 debido a librerías deprecadas.
 
-## Development server
+Angular 16 library with several components to handle [Chilean RUT](https://en.wikipedia.org/wiki/National_identification_number#Chile) validation, cleaning and formatting.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Installation
 
-## Code scaffolding
+```bash
+yarn add ng16-rut
+# or
+npm install ng16-rut --save
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Usage
 
-## Build
+### Set-up:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+The easiest way to use this library is to import Ng2Rut in your app's main module.
 
-## Running unit tests
+```typescript
+import { NgModule } from '@angular/core';
+import { Ng16RutModule } from 'ng16-rut';
+import { BrowserModule } from '@angular/platform-browser';
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+@NgModule({
+  ...
+  imports: [
+    BrowserModule,
+    Ng16RutModule
+  ],
+})
+class DemoAppModule { }
+```
 
-## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+### Using it:
 
-## Further help
+ng9-rut exposes multiple features that can be used to perform input validation and formatting. Probably you want to use one of the following:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+- `RutValidator`: Exposes the `validateRut` directive (to attach to models or inputs) and the RutValidator class to be used as `Validator` on reactive forms.
+- `RutPipe`: Exposes the `RutPipe` pipe to format rut numbers on templates
+- `RutDirective`: Exposes the `formatRut` directive to format RUT inputs.
+
+#### RutValidator
+
+##### Reactive forms
+
+```typescript
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { RutValidator } from 'ng16-rut';
+export class DemoAppComponent {
+  constructor (fb: FormBuilder, rutValidator: RutValidator) {
+    this.reactiveForm = fb.group({
+      rut: ['30972198', [Validators.required, rutValidator]]
+    });
+  }
+}
+
+```
+
+##### Template Form
+```html
+<input [(ngModel)]="user.rut" name="rut" validateRut required>
+```
+
+#### RutPipe
+
+```html
+{{ user.rut }}
+<!-- 30972198 -->
+{{ user.rut | rut }}
+<!-- 3.097.219-8 -->
+```
+
+#### formatRut (Directive)
+```html
+<input [(ngModel)]="user.rut" name="rut" formatRut required>
+<!--
+(on blur)
+3.097.219-8
+
+(on focus)
+30972198
+-->
+```
+
+## Contributing
+
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
+
+## Credits
+
+Esta lib fue actualizada en base al proyecto de los chicos de platanus.
+https://github.com/platanus/ng2-rut
+
+## License
+
+Angular 2 RUT is © 2016 Platanus, spa. It is free software and may be redistributed under the terms specified in the LICENSE file.
